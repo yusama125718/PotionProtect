@@ -1,0 +1,13 @@
+name: PotionProtect
+version: '1.0'
+main: yusama125718.potionprotect.PotionProtect
+api-version: 1.17
+
+commands:
+  potp:
+    description: PotionProtect
+    usage: /potp helpでコマンドを確認
+
+permissions:
+  potp.op:
+    default: op

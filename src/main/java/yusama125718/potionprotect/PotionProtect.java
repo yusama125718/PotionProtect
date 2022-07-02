@@ -29,6 +29,7 @@ public final class PotionProtect extends JavaPlugin implements Listener {
         potp = this;
         potloadconfig();
         saveDefaultConfig();
+        getServer().getPluginManager().registerEvents(this, this);
     }
 
     @Override
@@ -156,16 +157,16 @@ public final class PotionProtect extends JavaPlugin implements Listener {
     }
 
     @EventHandler
-    public void BrewingStandFuelEvent(BrewingStandFuelEvent event, @NotNull Block brewingStand, @NotNull ItemStack fuel, int fuelPower) {
+    public void BrewingStandFuelEvent(BrewingStandFuelEvent event) {
         System.out.println("void");
         if (!operation) return;
         System.out.println("operation");
-        if (!allowitem.containsKey(fuel.getType())) return;
+        if (!allowitem.containsKey(event.getFuel().getType())) return;
         System.out.println("item");
-        for (Integer number : allowitem.get(fuel.getType())) {
-            if (!fuel.hasItemMeta()) return;
+        for (Integer number : allowitem.get(event.getFuel().getType())) {
+            if (!event.getFuel().hasItemMeta()) return;
             System.out.println("number");
-            if (fuel.getItemMeta().getCustomModelData() != number) {
+            if (event.getFuel().getItemMeta().getCustomModelData() != number) {
                 System.out.println("stop");
                 event.setCancelled(true);       //キャンセル処理
             }
