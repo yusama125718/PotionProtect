@@ -1,13 +1,20 @@
-name: PotionProtect
+name: Man10Manchiro
 version: '${project.version}'
-main: yusama125718.potionprotect.PotionProtect
+main: yusama125718_209282ihcuobust.man10manchiro.Man10Manchiro
 api-version: 1.17
 
 commands:
-  potp:
-    description: PotionProtect
-    usage: /potp helpでコマンドを確認
+  mcr:
+    description: manchiro
+    usage: /<command> [text] [text] [text]
 
 permissions:
-  potp.op:
+  mcr.op:
     default: op
+  mcr.player:
+    default: true
+  mcr.parent:
+    default: op
+
+depend:
+  - Vault
