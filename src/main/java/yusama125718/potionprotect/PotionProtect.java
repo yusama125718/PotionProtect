@@ -7,7 +7,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.BrewEvent;
 import org.bukkit.event.inventory.BrewingStandFuelEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.Debug;
@@ -15,6 +17,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 import static java.lang.Integer.parseInt;
 
@@ -97,7 +100,7 @@ public final class PotionProtect extends JavaPlugin implements Listener {
                         sender.sendMessage("§9§l[PotionProtect] §cそのアイテムは使えません");
                         return true;
                     }
-                    boolean isNumeric = args[0].matches("-?\\d+");
+                    boolean isNumeric = args[1].matches("-?\\d+");
                     if (!isNumeric) {
                         sender.sendMessage("§9§l[PotionProtect] §c無効な数字です");
                         return true;
@@ -106,7 +109,7 @@ public final class PotionProtect extends JavaPlugin implements Listener {
                         sender.sendMessage("§9§l[PotionProtect] §c無効な数字です");
                         return true;
                     }
-                    int addnumber = parseInt(args[0]);
+                    int addnumber = parseInt(args[1]);
                     if (addnumber <= 1) {
                         sender.sendMessage("§9§l[PotionProtect] §c無効な数字です");
                         return true;
@@ -127,7 +130,7 @@ public final class PotionProtect extends JavaPlugin implements Listener {
                         sender.sendMessage("§9§l[PotionProtect] §cそのアイテムは使えません");
                         return true;
                     }
-                    boolean isNumeric = args[0].matches("-?\\d+");
+                    boolean isNumeric = args[1].matches("-?\\d+");
                     if (!isNumeric) {
                         sender.sendMessage("§9§l[PotionProtect] §c無効な数字です");
                         return true;
@@ -136,7 +139,7 @@ public final class PotionProtect extends JavaPlugin implements Listener {
                         sender.sendMessage("§9§l[PotionProtect] §c無効な数字です");
                         return true;
                     }
-                    int addnumber = parseInt(args[0]);
+                    int addnumber = parseInt(args[1]);
                     if (addnumber <= 1) {
                         sender.sendMessage("§9§l[PotionProtect] §c無効な数字です");
                         return true;
@@ -158,19 +161,24 @@ public final class PotionProtect extends JavaPlugin implements Listener {
 
     @EventHandler
     public void BrewingStandFuelEvent(BrewingStandFuelEvent event) {
-        System.out.println("void");
         if (!operation) return;
-        System.out.println("operation");
         if (!allowitem.containsKey(event.getFuel().getType())) return;
-        System.out.println("item");
-        for (Integer number : allowitem.get(event.getFuel().getType())) {
+        for (Integer number : allowitem.get(Material.BLAZE_POWDER)) {       //確認処理
             if (!event.getFuel().hasItemMeta()) return;
-            System.out.println("number");
-            if (event.getFuel().getItemMeta().getCustomModelData() != number) {
-                System.out.println("stop");
-                event.setCancelled(true);       //キャンセル処理
-            }
+            if (event.getFuel().getItemMeta().getCustomModelData() == number) return;
         }
+        event.setCancelled(true);       //キャンセル処理
+    }
+
+    @EventHandler
+    public void BrewEvent(BrewEvent event) {
+        if (!operation) return;
+        if (!allowitem.containsKey(Objects.requireNonNull(event.getContents().getIngredient()).getType())) return;
+        for (Integer number : allowitem.get(event.getContents().getIngredient().getType())) {       //確認処理
+            if (!event.getContents().getIngredient().hasItemMeta()) return;
+            if (event.getContents().getIngredient().getItemMeta().getCustomModelData() == number) return;
+        }
+        event.setCancelled(true);       //キャンセル処理
     }
 
     void potloadconfig(){     //configload
